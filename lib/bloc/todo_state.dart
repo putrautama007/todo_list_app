@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:todo_list_app/data/model/todo_model.dart';
 
 abstract class TodoState extends Equatable {
   const TodoState();
@@ -37,8 +38,10 @@ class NoData extends TodoState {
 }
 
 class HasData extends TodoState {
-  const HasData();
+  final List<TodoData> data;
+
+  const HasData({required this.data});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [data];
 }

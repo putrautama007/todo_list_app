@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_list_app/bloc/todo_bloc.dart';
 import 'package:todo_list_app/bloc/todo_event.dart';
 import 'package:todo_list_app/bloc/todo_state.dart';
+import 'package:todo_list_app/data/model/todo_model.dart';
 import 'package:todo_list_app/widget/card/card_todo.dart';
 import 'package:todo_list_app/widget/snackbar/custom_snackbar.dart';
 
@@ -18,13 +19,13 @@ class _TodoScreenState extends State<TodoScreen> {
   final _descController = TextEditingController();
 
   Future<Future> _displayDialog(
-      BuildContext context, bool isUpdate, Object? data) async {
+      BuildContext context, bool isUpdate, TodoData? data) async {
     if (data == null) {
       _titleController.text = "";
       _descController.text = "";
     } else {
-      _titleController.text = "data.title";
-      _descController.text = "data.description";
+      _titleController.text = data.title!;
+      _descController.text = data.description!;
     }
     return showDialog(
       context: context,
@@ -51,12 +52,21 @@ class _TodoScreenState extends State<TodoScreen> {
                 Navigator.pop(context);
                 if (isUpdate) {
                   context.read<TodoBloc>().add(
-                        const UpdateTodo(
-                            ),
+                        UpdateTodo(
+                          data: TodoData(
+                            id: data!.id,
+                            title: _titleController.text,
+                            description: _descController.text,
+                          ),
+                        ),
                       );
                 } else {
                   context.read<TodoBloc>().add(
-                        const InsertTodo(
+                        InsertTodo(
+                          data: TodoData(
+                            title: _titleController.text,
+                            description: _descController.text,
+                          ),
                         ),
                       );
                 }
@@ -104,16 +114,15 @@ class _TodoScreenState extends State<TodoScreen> {
           child: BlocBuilder<TodoBloc, TodoState>(
             builder: (context, state) {
               if (state is HasData) {
-                return Container();
-                // return ListView.builder(
-                //   itemCount: state.data.length,
-                //   itemBuilder: (context, index) => CardTodo(
-                //     index: index,
-                //     data: state.data[index],
-                //     editPressed: () =>
-                //         _displayDialog(context, true, state.data[index]),
-                //   ),
-                // );
+                return ListView.builder(
+                  itemCount: state.data.length,
+                  itemBuilder: (context, index) => CardTodo(
+                    index: index,
+                    data: state.data[index],
+                    editPressed: () =>
+                        _displayDialog(context, true, state.data[index]),
+                  ),
+                );
               } else if (state is NoData) {
                 return Text(state.message);
               } else if (state is Error) {
