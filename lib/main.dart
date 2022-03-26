@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => TodoBloc(
-        todoLocalDatasource: TodoLocalDatasource(
+        todoLocalDatasource: const TodoLocalDatasource(
           database: Database(),
         ),
       ),
