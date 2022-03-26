@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:todo_list_app/data/model/todo_data.dart';
 
 abstract class TodoEvent extends Equatable {
   const TodoEvent();
@@ -8,24 +9,32 @@ abstract class TodoEvent extends Equatable {
 }
 
 class InsertTodo extends TodoEvent {
-  const InsertTodo();
+  final TodoData todoData;
+
+  const InsertTodo({
+    required this.todoData,
+  });
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [todoData];
 }
 
 class GetAllTodo extends TodoEvent {}
 
 class UpdateTodo extends TodoEvent {
-  const UpdateTodo();
+  final TodoData todoData;
+
+  const UpdateTodo({required this.todoData});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [todoData];
 }
 
 class DeleteTodo extends TodoEvent {
-  const DeleteTodo();
+  final int id;
+
+  const DeleteTodo({required this.id});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [id];
 }
